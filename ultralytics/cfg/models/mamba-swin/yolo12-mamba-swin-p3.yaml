@@ -1,0 +1,50 @@
+# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+
+# YOLO12 object detection model with Swin Transformer backbone integration
+# Model docs: https://docs.ultralytics.com/models/yolo12
+# Task docs: https://docs.ultralytics.com/tasks/detect
+# Enhanced with Swin Transformer V2 blocks for improved feature extraction
+
+# Parameters
+nc: 10 # number of classes
+scales: # model compound scaling constants, i.e. 'model=yolo12n-Swin.yaml' will call yolo12-Swin.yaml with scale 'n'
+  # [depth, width, max_channels]
+  n: [1.00, 0.125, 1024] # nano: lighter Swin blocks
+  s: [1.00, 0.25, 1024] # small: standard Swin blocks
+  m: [1.00, 0.50, 1024] # medium: enhanced Swin blocks
+  l: [1.00, 1.00, 512] # large: deeper Swin blocks
+
+# Mamba-YOLO backbone 
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, SimpleStem, [128]]   # 0-P2/4                   #inp, embed_dim
+  - [-1, 4, SS2DBlock, [128]]                               # 1
+
+  - [-1, 1, VisionClueMerge, [256]]      # 2 p3/8
+  - [-1, 4, SS2DBlock, [256]]              # 3 
+
+  - [-1, 1, VisionClueMerge, [512]]      # 4 p4/16
+  - [-1, 2, SS2DBlock, [512]]              # 5 c2, input_resolution, num_heads, window_size,
+  
+  - [-1, 1, VisionClueMerge, [1024]]      # 6 p5/32
+  - [-1, 2, SwinTransformerBasicLayer, [1024, [20, 20], 32, 5]]   # 7
+
+# Mamba-YOLO PAFPN
+head:
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
+  - [[-1, 5], 1, Concat, [1]] # cat backbone P4
+  - [-1, 2, C2f, [512]] # 10
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
+  - [[-1, 3], 1, Concat, [1]] # cat backbone P3
+  - [-1, 2, C2f, [256]] # 13
+
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 10], 1, Concat, [1]] # cat head P4
+  - [-1, 2, C2f, [512]] # 16
+
+  - [-1, 1, Conv, [512, 3, 2]]
+  - [[-1, 7], 1, Concat, [1]] # cat head P5
+  - [-1, 2, C3k2, [1024, True]] # 19 (P5/32-large)
+
+  - [[13, 16, 19], 1, Detect, [nc]] # Detect(P3, P4, P5)
