@@ -20,6 +20,7 @@ def parse_opt():
     parser.add_argument('--name', default='mamba-swin-m', help='save to project/name')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
+    parser.add_argument('--seed', type=int, default=0, help='global RNG seed')
     opt = parser.parse_args()
     return opt
 
@@ -37,6 +38,7 @@ if __name__ == '__main__':
         "amp": opt.amp,
         "project": ROOT + opt.project,
         "name": opt.name,
+        "seed": opt.seed
     }
     model_conf = ROOT + opt.config
     YOLO(model_conf).train(**args)
