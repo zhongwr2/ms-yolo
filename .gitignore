@@ -169,7 +169,10 @@ benchmark_output/
 pr_curves
 runs/
 test_output/
+/output_dir/
 
-.pth
+# Model weights / checkpoints (large binaries)
+*.pt
+*.pth
 tests/
 .vscode/
