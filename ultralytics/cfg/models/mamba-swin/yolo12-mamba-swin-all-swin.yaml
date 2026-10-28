@@ -1,0 +1,55 @@
+# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+
+# =============================================================================
+# Ablation (c): ALL-SWIN backbone (no Mamba)
+# =============================================================================
+# ISI reviewer request (IMAVIS-D-26-02785, comment 1c):
+#   Replace every Mamba (SS2DBlock) stage with the Swin Transformer block to
+#   quantify how much of the gain is attributable to Mamba vs. the overall
+#   P2 + simplified-FPN + SOPE recipe.
+#
+# IMPORTANT - input_resolution must match the real feature-map size (640x640):
+#   Stage 1 -> 160x160, Stage 2 -> 80x80, Stage 3 -> 40x40, Stage 4 -> 20x20.
+#   num_heads = 4 (Stages 1-3) divides the channel dims at all scales;
+#   Stage 4 keeps num_heads = 32 as in the MS-YOLO template.
+# =============================================================================
+
+# Parameters
+nc: 10 # number of classes
+scales:
+  # [depth, width, max_channels]
+  n: [1.00, 0.125, 1024]
+  s: [1.00, 0.25, 1024]
+  m: [1.00, 0.50, 1024]
+  l: [1.00, 1.00, 512]
+
+# All-Swin backbone
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, SOPE, [128]]                                        # 0-P2/4
+  - [-1, 4, SwinTransformerBasicLayer, [128, [160, 160], 4, 5]] # 1  Stage 1
+
+  - [-1, 1, VisionClueMerge, [256]]                             # 2  P3/8
+  - [-1, 4, SwinTransformerBasicLayer, [256, [80, 80], 4, 5]]   # 3  Stage 2
+
+  - [-1, 1, VisionClueMerge, [512]]                             # 4  P4/16
+  - [-1, 2, SwinTransformerBasicLayer, [512, [40, 40], 4, 5]]   # 5  Stage 3
+
+  - [-1, 1, VisionClueMerge, [1024]]                            # 6  P5/32
+  - [-1, 2, SwinTransformerBasicLayer, [1024, [20, 20], 32, 5]] # 7  Stage 4
+
+# Simplified FPN (top-down only) + P2/P3/P4 detection
+head:
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]              # 8
+  - [[-1, 5], 1, Concat, [1]] # cat backbone P4             # 9
+  - [-1, 1, C2f, [512]] # 10
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]              # 11
+  - [[-1, 3], 1, Concat, [1]] # cat backbone P3             # 12
+  - [-1, 1, C2f, [256]] # 13
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]              # 14
+  - [[-1, 1], 1, Concat, [1]] # cat backbone P2             # 15
+  - [-1, 1, C2f, [128]] # 16
+
+  - [[16, 13, 10], 1, Detect, [nc]] # Detect(P2, P3, P4)
