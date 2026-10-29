@@ -395,11 +395,15 @@ class SS2DBlock(nn.Module):
                                          d_conv=ssm_conv,
                                          conv_bias=ssm_conv_bias,
                                          dropout=ssm_drop_rate, ) for _ in range(n)))
+        self.norm_out = norm_layer(hidden_dim)
         self.drop_path = DropPath(drop_path)
 
     def forward(self, x):
-        x = x + self.drop_path(self.ss2d(self.norm(x)))
-        return x
+        y = self.ss2d(self.norm(x))
+        norm_out = getattr(self, "norm_out", None)
+        if norm_out is not None:
+            y = norm_out(y)
+        return x + self.drop_path(y)
 
 
 class SimpleStem(nn.Module):
