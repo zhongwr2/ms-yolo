@@ -6,7 +6,7 @@ ROOT = os.path.abspath('.') + "/"
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data', type=str, default='ultralytics/cfg/datasets/VisAlage2023.yaml', help='dataset.yaml path')
+    parser.add_argument('--data', type=str, default='ultralytics/cfg/datasets/TinyPerson.yaml', help='dataset.yaml path')
     parser.add_argument('--config', type=str, default='ultralytics/cfg/models/mamba-yolo/Mamba-YOLO-T.yaml', help='model path(s)')
     parser.add_argument('--batch_size', type=int, default=8, help='batch size')
     parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=640, help='inference size (pixels)')
@@ -16,8 +16,8 @@ def parse_opt():
     parser.add_argument('--epochs', type=int, default=150)
     parser.add_argument('--optimizer', default='AdamW', help='SGD, Adam, AdamW')
     parser.add_argument('--amp', action='store_true', help='open amp')
-    parser.add_argument('--project', default='/output_dir/visdrone', help='save to project/name')
-    parser.add_argument('--name', default='mamba-yolo-t-', help='save to project/name')
+    parser.add_argument('--project', default='/output_dir/tinyperson', help='save to project/name')
+    parser.add_argument('--name', default='mamba-yolo-T-', help='save to project/name')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
     opt = parser.parse_args()
