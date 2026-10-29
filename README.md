@@ -224,7 +224,7 @@ If you find this work useful, please cite:
 
 ## Acknowledgement
 
-This repo is modified from the open-source real-time object detection codebase [Ultralytics](https://github.com/ultralytics/ultralytics). The selective-scan implementation comes from [VMamba](https://github.com/MzeroMiko/VMamba) and [mamba_ssm](https://github.com/state-spaces/mamba).
+This repo is modified from the open-source real-time object detection codebase [Ultralytics](https://github.com/ultralytics/ultralytics). The selective-scan implementation comes from [VMamba](https://github.com/MzeroMiko/VMamba). 
 
 ## License
 
