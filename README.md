@@ -11,7 +11,7 @@ MS-YOLO is a scale-adaptive **Mamba–Swin hybrid detector** for small object de
 
 All pretrained checkpoints are available in [GitHub Releases](#checkpoints).
 
-## News
+## Updated
 
 - **2026-10**: all pretrained checkpoints (VisDrone2019 and TinyPerson) are released on GitHub Releases.
 
@@ -207,20 +207,6 @@ Table 4 (e), the full model, corresponds to `MS-YOLO-m-seed0/1/2.zip` listed abo
 | [mambayolo-T.zip](https://github.com/zhongwr2/ms-yolo/releases/download/TinyPerson/mambayolo-T.zip)<br><sub>`989966e33bfd52e4079098963654079a74b4781eaa57d0a5e91f79c38d5b0a80`</sub> | MambaYOLO-T baseline | 48.3 MB |
 | [mambayolo-B.zip](https://github.com/zhongwr2/ms-yolo/releases/download/TinyPerson/mambayolo-B.zip)<br><sub>`da4f76cafcbd41ae7a786648590d68e58afca8195e83c6eac3d660721cd27272`</sub> | MambaYOLO-B baseline | 160 MB |
 
-## Citation
-
-If you find this work useful, please cite:
-
-```bibtex
-@article{zhong2026msyolo,
-  title   = {MS-YOLO: A Mamba--Swin Transformer Hybrid Architecture for
-             Parameter- and Computation-Efficient Small Object Detection},
-  author  = {Zhong, Wenrui and Qin, Chang and Pang, Guangyao and Feng, Meiyan},
-  journal = {Image and Vision Computing},
-  year    = {2026},
-  note    = {Under review}
-}
-```
 
 ## Acknowledgement
 
