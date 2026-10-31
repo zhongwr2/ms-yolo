@@ -1,20 +1,6 @@
 #!/usr/bin/env python3
 """Per-class and per-object-size AP breakdown for Ultralytics YOLO detectors.
 
-Purpose
--------
-Reviewer comment 5 (IMAVIS-D-26-02785) asks for (i) per-category AP and
-(ii) AP split by object size (e.g. objects smaller than 16x16 px). Ultralytics'
-`model.val()` reports per-class AP but no size breakdown, so this script:
-
-  1. runs the official Ultralytics validator and captures its exact (unscaled)
-     predictions and ground truth,
-  2. computes AP with the same `ap_per_class` protocol as `model.val()`, so the
-     `all` row reproduces Table II exactly,
-  3. derives per-size bins by matching once per IoU threshold and using COCO-style
-     ignore semantics for GT outside the bin,
-  4. writes per-class, per-size, and per-class x per-size tables (CSV + Markdown).
-
 Default size bins (area in px^2):
     tiny    [0,      16^2)      < 16x16 px
     small   [16^2,   32^2)      16x16 - 32x32 px
@@ -41,15 +27,7 @@ Usage
       --data ultralytics/cfg/datasets/VisDrone.yaml \
       --device 0 --out runs/ap_breakdown
 
-Notes
------
-* Uses the same evaluation settings as Ultralytics validation by default:
-  conf=0.001, NMS iou=0.7, max_det=300, 101-point interpolated AP.
-* Raise `--max-det` (e.g. 1000) if you want to reduce truncation in very
-  crowded VisDrone images, but note this no longer matches `model.val()`.
-* `--split` can be val / test / train (any key in the dataset YAML).
-* Mamba-based models (MS-YOLO) use a custom CUDA selective-scan kernel and
-  therefore need a GPU: pass `--device 0`. YOLOv12/RT-DETR run on CPU too.
+
 """
 
 from __future__ import annotations

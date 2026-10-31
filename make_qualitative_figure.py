@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 """Build the qualitative comparison figure (Original + 3 detectors).
 
-Layout: 4 rows (randomly sampled images) x 4 columns
-        Original (GT) | YOLOv12-M | MambaYOLO-B | MS-YOLO-M
-All detectors use identical settings (conf=0.25, IoU=0.7, imgsz=640, FP16).
-A GT-driven zoom window is cropped from every column and shown as an inset.
-
 Usage:
     python make_qualitative_figure.py
     python make_qualitative_figure.py --images runs/qualitative_random/selected_images.txt \
